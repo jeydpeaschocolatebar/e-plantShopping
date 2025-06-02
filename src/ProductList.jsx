@@ -11,6 +11,7 @@ function ProductList({ onHomeClick }) {
     const [addedToCart, setAddedToCart] = useState({}); // State to manage added items in the cart
     const dispatch = useDispatch(); // Import useDispatch from react-redux to dispatch actions
     const cart = useSelector((state) => state.cart.items); // Import useSelector to access the cart state from Redux store
+    const totalQuantity = cart.reduce((total, item) => total + item.quantity, 0); // Calculate the total quantity of items in the cart
 
     const plantsArray = [
         {
@@ -269,14 +270,6 @@ function ProductList({ onHomeClick }) {
         }));
     };
 
-    const handleDecrement = (item) => {
-        if (item.quantity > 1) {
-            dispatch(updateQuantity({ name: item.name, quantity: item.quantity - 1 })); // Decrease the quantity of the item in the cart
-        } else {
-            dispatch(removeItem(item.name)); // If quantity is 1, remove the item from the cart
-        }
-    }
-
     useEffect(() => {
         const itemsInCart = {};
         cart.forEach(item => {
@@ -284,10 +277,6 @@ function ProductList({ onHomeClick }) {
         });
         setAddedToCart(itemsInCart); // Update the local state with the items in the cart
     }, [cart]); // Dependency array to re-run the effect when cart changes
-
-    const getTotalItems = () => {
-        return cart.reduce((total, item) => total + item.quantity, 0); // Calculate the total number of items in the cart
-    }
 
     return (
         <div>
@@ -306,7 +295,12 @@ function ProductList({ onHomeClick }) {
                 </div>
                 <div style={styleObjUl}>
                     <div> <a href="#" onClick={(e) => handlePlantsClick(e)} style={styleA}>Plants</a></div>
-                    <div> <a href="#" onClick={(e) => handleCartClick(e)} style={styleA}><h1 className='cart'><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" id="IconChangeColor" height="68" width="68"><rect width="156" height="156" fill="none"></rect><circle cx="80" cy="216" r="12"></circle><circle cx="184" cy="216" r="12"></circle><path d="M42.3,72H221.7l-26.4,92.4A15.9,15.9,0,0,1,179.9,176H84.1a15.9,15.9,0,0,1-15.4-11.6L32.5,37.8A8,8,0,0,0,24.8,32H8" fill="none" stroke="#faf9f9" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" id="mainIconPathAttribute"></path></svg></h1></a></div>
+                    <div>
+                        <a href="#" onClick={(e) => handleCartClick(e)} style={styleA}><h1 className='basket cart'><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" id="IconChangeColor" height="68" width="68"><rect width="156" height="156" fill="none"></rect><circle cx="80" cy="216" r="12"></circle><circle cx="184" cy="216" r="12"></circle><path d="M42.3,72H221.7l-26.4,92.4A15.9,15.9,0,0,1,179.9,176H84.1a15.9,15.9,0,0,1-15.4-11.6L32.5,37.8A8,8,0,0,0,24.8,32H8" fill="none" stroke="#faf9f9" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" id="mainIconPathAttribute"></path></svg></h1></a>
+                        {totalQuantity > 0 && (
+                            <span className="basket-badge">{totalQuantity}</span>
+                        )}
+                    </div>
                 </div>
             </div>
             {!showCart ? (

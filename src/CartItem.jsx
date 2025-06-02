@@ -19,8 +19,6 @@ const CartItem = ({ onContinueShopping }) => {
     onContinueShopping(e);
   };
 
-
-
   const handleIncrement = (item) => {
     dispatch(updateQuantity({ name: item.name, quantity: item.quantity + 1 }));
   };
@@ -41,6 +39,15 @@ const CartItem = ({ onContinueShopping }) => {
   const calculateTotalCost = (item) => {
     return (parseFloat(item.cost.substring(1)) * item.quantity).toFixed(2);
   };
+
+  const handleCheckout = (e) => {
+    e.preventDefault();
+
+    if (cart.length === 0) {
+      alert('Coming Soon!');
+      return;
+    }
+  }
 
   return (
     <div className="cart-container">
@@ -67,7 +74,7 @@ const CartItem = ({ onContinueShopping }) => {
       <div className="continue_shopping_btn">
         <button className="get-started-button" onClick={(e) => handleContinueShopping(e)}>Continue Shopping</button>
         <br />
-        <button className="get-started-button1" onClick={() => { alert('Coming Soon'); }}>Checkout</button>
+        <button className="get-started-button1" onClick={() => handleCheckout(e)}>Checkout</button>
       </div>
     </div>
   );
